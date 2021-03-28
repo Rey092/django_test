@@ -1,0 +1,31 @@
+{% extends "elements/base.html" %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container">
+        <h1>Posts</h1>
+        <div class="error">
+            {{ err }}
+        </div>
+        <div class="payLoad">
+            <form method="POST">
+                {% csrf_token %}
+
+                {{ form.title }}
+                {{ form.description }}
+                {{ form.content }}
+
+                <br>
+                <button class="btn btn-success">Send Post</button>
+            </form>
+        </div>
+
+    </div>
+
+{% endblock %}
