@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 
 from .forms import PostForm
 from .models import Post
@@ -16,7 +16,7 @@ def about(request):
     return render(request, "pages/about.html")
 
 
-def posts(request):
+def post(request):
     user_posts = Post.objects.all()
     return render(request, "pages/post.html", {"title": "Posts", "posts": user_posts})
 

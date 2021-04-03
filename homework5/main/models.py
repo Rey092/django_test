@@ -10,6 +10,7 @@ class User(models.Model):
     email = models.EmailField("User email", max_length=100)
 
     def __str__(self):
+
         return self.name
 
 
