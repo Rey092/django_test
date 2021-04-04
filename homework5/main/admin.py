@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Post, Author, Subscriber
+from .models import Author, Post, Subscriber
 
 
 class PostAdmin(admin.ModelAdmin):

@@ -1,7 +1,6 @@
-from django.forms import ModelForm, TextInput, Select
+from django.forms import ModelForm, Select, TextInput
 
 from .models import Post, Subscriber
-from .services.subscribe_service import subscribe_email_pattern
 
 
 class PostForm(ModelForm):
@@ -37,8 +36,8 @@ class SubscribeForm(ModelForm):
                 "required": "required",
                 "class": "form-control",
                 "placeholder": "Your email",
-                # "pattern": subscribe_email_pattern -
-                # валидация через HTML пишут не надежная. Пока оставлю ток серверную валидацию мыла, эту закомменчу.
+                # "pattern": "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                # Валидация через HTML. Пишут не надежная...? Пока оставлю серверную валидацию мыла, эту закомменчу.
             }),
             "author_id": Select(attrs={
                 "required": "required",

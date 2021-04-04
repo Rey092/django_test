@@ -1,6 +1,6 @@
 from django.conf import settings
-from django.http import JsonResponse, HttpResponse
-from django.shortcuts import redirect, render, get_object_or_404
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import PostForm, SubscribeForm
 from .models import Author
@@ -52,7 +52,6 @@ def api_subscribe(request):
     subscribe(author, email_to)
     notify(email_to)
 
-    data = {"author_id": author_id}
     return HttpResponse(f"You are subscribed on {author}")
 
 
@@ -65,6 +64,7 @@ def posts_subscribe(request):
             return redirect("/")
         else:
             err_email = ""
+
     else:
         form = SubscribeForm()
     context = {

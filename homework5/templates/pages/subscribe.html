@@ -7,6 +7,8 @@ Subscribe
 
 
 {% block content %}
+
+
 <div class="container">
     <div class="register-photo">
         <div class="form-container">
@@ -20,7 +22,20 @@ Subscribe
                     <div class="{{ err_subscribe }} alert alert-danger" role="alert">Вы уже подписаны на Автора</div>
                 </div>
                 <div class="form-group">
-                    <div class="{{ err_email }} alert alert-danger" role="alert">Ошибка - не валидный email</div>
+                    {% if form.errors %}
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="form-group">{{ form.email_to }}</div>
                 <div class="form-group">{{ form.author_id }}</div>
