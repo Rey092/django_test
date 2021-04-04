@@ -2,21 +2,29 @@ from django.db import models
 from django.utils.timezone import now
 
 
-class User(models.Model):
+class Author(models.Model):
     class Meta:
-        db_table = "table_users"
+        verbose_name = "Author"
+        verbose_name_plural = "Authors"
 
-    name = models.CharField("User name", max_length=100)
-    email = models.EmailField("User email", max_length=100)
+    name = models.CharField("Author name", max_length=100)
+    email = models.EmailField("Author email", max_length=100)
 
     def __str__(self):
+        return f"ID {self.id} - {self.name}"
 
-        return self.name
+
+class Subscriber(models.Model):
+    email_to = models.EmailField("Subscriber email", max_length=100)
+    author_id = models.ForeignKey("Author", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.email_to
 
 
 class Post(models.Model):
     class Meta:
-        db_table = "table_post"
+        db_table = "table_posts"
         ordering = ['-id']
 
     title = models.CharField("Post title", max_length=100)

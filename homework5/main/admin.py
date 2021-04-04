@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Post, User
+from .models import Post, Author, Subscriber
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -11,5 +11,13 @@ class PostAdmin(admin.ModelAdmin):
         model = Post
 
 
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ['name', 'id', 'email']
+
+    class Meta:
+        model = Author
+
+
 admin.site.register(Post, PostAdmin)
-admin.site.register(User)
+admin.site.register(Author, AuthorAdmin)
+admin.site.register(Subscriber)

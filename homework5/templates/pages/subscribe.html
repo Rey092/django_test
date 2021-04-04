@@ -1,0 +1,40 @@
+{% extends "elements/base.html" %}
+
+
+{% block title %}
+Subscribe
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="register-photo">
+        <div class="form-container">
+            <div class="image-holder"></div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="error">
+                </div>
+                <h2 class="text-center"><strong>Subscribe</strong> to the Author.</h2>
+                <div class="form-group">
+                    <div class="{{ err_subscribe }} alert alert-danger" role="alert">Вы уже подписаны на Автора</div>
+                </div>
+                <div class="form-group">
+                    <div class="{{ err_email }} alert alert-danger" role="alert">Ошибка - не валидный email</div>
+                </div>
+                <div class="form-group">{{ form.email_to }}</div>
+                <div class="form-group">{{ form.author_id }}</div>
+                <div class="form-group">
+                    <div class="form-check"><label class="form-check-label"><input class="form-check-input"
+                                                                                   type="checkbox">Receive notifications
+                        on Email?</label></div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" type="submit">Subscribe</button>
+                </div>
+                <a class="already" href="{% url 'post_create' %}">You want to create a Post? Click here.</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
