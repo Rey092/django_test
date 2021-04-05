@@ -7,7 +7,11 @@ from . import views
 urlpatterns = [
     path('', views.home_view, name='home'),
     path('about/', views.about, name='about'),
-    path('posts/', views.post, name='posts'),
+    path('posts/', views.posts, name='posts'),
+    path('posts/<int:author_id>', views.author_posts, name='author_posts'),
     path('posts/create', views.post_create, name='post_create'),
-    path('posts/api', views.post_api, name='post_api'),
+    path('posts/subscribe', views.posts_subscribe, name='posts_subscribe'),
+
+    path('api/posts', views.api_posts, name='api_posts'),
+    path('api/subscribe', views.api_subscribe, name='api_subscribe'),
 ]
