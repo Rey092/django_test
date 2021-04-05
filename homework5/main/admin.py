@@ -18,6 +18,14 @@ class AuthorAdmin(admin.ModelAdmin):
         model = Author
 
 
+class SubscriberAdmin(admin.ModelAdmin):
+    list_display = ['email_to', 'id', 'author_id']
+    search_fields = ['author_id', 'email_to']
+
+    class Meta:
+        model = Subscriber
+
+
 admin.site.register(Post, PostAdmin)
 admin.site.register(Author, AuthorAdmin)
-admin.site.register(Subscriber)
+admin.site.register(Subscriber, SubscriberAdmin)

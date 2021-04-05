@@ -13,6 +13,7 @@
         <div class="error">
             {{ err }}
         </div>
+        {% include "elements/form_errors.html" %}
         <div class="payLoad">
             <form method="POST">
                 {% csrf_token %}
@@ -20,7 +21,7 @@
                 {{ form.title }}
                 {{ form.description }}
                 {{ form.content }}
-
+                {{ form.author_id }}
                 <br>
                 <button class="btn btn-success">Send Post</button>
             </form>

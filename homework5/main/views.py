@@ -1,12 +1,11 @@
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 
 from .forms import PostForm, SubscribeForm
-from .models import Author
 from .services.notify_service import notify
-from .services.post_service import posts_all
-from .services.subscribe_service import subscribe
+from .services.post_service import posts_all, posts_by_author
+from .services.subscribe_service import get_author, get_author_data, subscribe
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
@@ -20,7 +19,11 @@ def about(request):
 
 
 def posts(request):
-    return render(request, "pages/post.html", {"title": "Posts", "posts": posts_all()})
+    return render(request, "pages/post.html", {"posts": posts_all()})
+
+
+def author_posts(request, author_id):
+    return render(request, "pages/post.html", {"posts": posts_by_author(author_id)})
 
 
 def post_create(request):
@@ -32,10 +35,7 @@ def post_create(request):
     else:
         form = PostForm()
 
-    context = {
-        'form': form,
-    }
-    return render(request, "pages/post_create.html", context=context)
+    return render(request, "pages/post_create.html", context={'form': form})
 
 
 def api_posts(request):
@@ -44,10 +44,8 @@ def api_posts(request):
 
 
 def api_subscribe(request):
-    author_id = request.GET["author_id"]
     email_to = request.GET["email_to"]
-
-    author = get_object_or_404(Author, pk=author_id)
+    author = get_author(request)
 
     subscribe(author, email_to)
     notify(email_to)
@@ -56,20 +54,16 @@ def api_subscribe(request):
 
 
 def posts_subscribe(request):
-    err_email, err_subscribe = "d-none", "d-none"
     if request.method == "POST":
         form = SubscribeForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("/")
-        else:
-            err_email = ""
 
+            author = get_author(request)
+            context = get_author_data(author)
+
+            return render(request, "pages/subscribe_success.html", context=context)
     else:
         form = SubscribeForm()
-    context = {
-        "form": form,
-        "err_email": err_email,
-        "err_subscribe": err_subscribe,
-    }
-    return render(request, "pages/subscribe.html", context=context)
+
+    return render(request, "pages/subscribe.html", context={"form": form})

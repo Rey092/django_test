@@ -6,7 +6,7 @@ from .models import Post, Subscriber
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        fields = ["title", "description", "content"]
+        fields = ["title", "description", "content", "author_id"]
         widgets = {
             "title": TextInput(attrs={
                 "class": "form-control",
@@ -19,6 +19,11 @@ class PostForm(ModelForm):
             "content": TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Input text",
+            }),
+            "author_id": Select(attrs={
+                "required": "required",
+                "class": "form-control",
+                "initial": 0  # TODO: Понять что написать. В принципе и так работает
             }),
         }
 

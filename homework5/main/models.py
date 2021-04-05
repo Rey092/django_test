@@ -30,9 +30,10 @@ class Post(models.Model):
         db_table = "table_posts"
         ordering = ['-id']
 
+    author_id = models.ForeignKey("Author", on_delete=models.CASCADE)
     title = models.CharField("Post title", max_length=100)
     description = models.CharField("Post description", max_length=50)
-    content = models.TextField("Post content", max_length=300)
+    content = models.TextField("Post content", max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(default=now)
 
