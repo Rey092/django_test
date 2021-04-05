@@ -13,6 +13,13 @@ class Author(models.Model):
     def __str__(self):
         return f"ID {self.id} - {self.name}"
 
+    def serialize(self):
+        return {
+            'author_id': self.id,
+            'author_name': self.name,
+            'author_email': self.email,
+        }
+
 
 class Subscriber(models.Model):
     class Meta:

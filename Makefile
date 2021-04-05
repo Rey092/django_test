@@ -20,6 +20,9 @@ flake8-install:
 run:
 	python $(manage.py) runserver
 
+kill-port:
+	sudo fuser -k 8000/tcp
+
 migrate:
 	python $(manage.py) makemigrations
 	python $(manage.py) migrate

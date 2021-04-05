@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from .forms import PostForm, SubscribeForm
 from .services.notify_service import notify
 from .services.post_service import posts_all, posts_by_author
-from .services.subscribe_service import get_author, get_author_data, subscribe
+from .services.subscribe_service import get_author, subscribe
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
@@ -60,7 +60,7 @@ def posts_subscribe(request):
             form.save()
 
             author = get_author(request)
-            context = get_author_data(author)
+            context = author.serialize()
 
             return render(request, "pages/subscribe_success.html", context=context)
     else:
