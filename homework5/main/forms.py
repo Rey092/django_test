@@ -23,7 +23,6 @@ class PostForm(ModelForm):
             "author_id": Select(attrs={
                 "required": "required",
                 "class": "form-control",
-                "initial": 0  # TODO: Понять что написать. В принципе и так работает
             }),
         }
 
@@ -44,6 +43,5 @@ class SubscribeForm(ModelForm):
             "author_id": Select(attrs={
                 "required": "required",
                 "class": "form-control",
-                "initial": 0  # TODO: Понять что написать. В принципе и так работает
             }),
         }
