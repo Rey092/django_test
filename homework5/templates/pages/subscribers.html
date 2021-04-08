@@ -1,0 +1,30 @@
+{% extends "elements/base.html" %}
+
+
+{% block title %}
+    Posts
+{% endblock %}
+
+
+{% block content %}
+    <div style="padding-top: 20px; padding-bottom: 10px" class="container">
+        <table class="table table-hover table-striped table-dark table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">Subscriber ID</th>
+                <th scope="col">Subscriber e-mail</th>
+                <th scope="col">Author ID</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for subscriber in subscribers %}
+                <tr>
+                    <td>{{ subscriber.id }}</td>
+                    <td>{{ subscriber.email_to }}</td>
+                    <td>{{ subscriber.author_id }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

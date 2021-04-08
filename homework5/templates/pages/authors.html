@@ -1,0 +1,30 @@
+{% extends "elements/base.html" %}
+
+
+{% block title %}
+    Authors
+{% endblock %}
+
+
+{% block content %}
+    <div style="padding-top: 20px; padding-bottom: 10px" class="container">
+        <table class="table table-hover table-striped table-dark table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for author in authors %}
+                <tr>
+                    <td>{{ author.id }}</td>
+                    <td>{{ author.name }}</td>
+                    <td>{{ author.email }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

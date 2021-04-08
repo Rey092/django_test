@@ -1,6 +1,6 @@
-from django.forms import ModelForm, Select, TextInput
+from django.forms import ModelChoiceField, ModelForm, Select, TextInput
 
-from .models import Post, Subscriber
+from .models import Author, Post, Subscriber
 
 
 class PostForm(ModelForm):
@@ -28,10 +28,17 @@ class PostForm(ModelForm):
 
 
 class SubscribeForm(ModelForm):
+    author_id = ModelChoiceField(
+        queryset=Author.objects.all().order_by("id"),
+        initial=Author.objects.first(),
+        widget=Select(attrs={
+            "class": "form-control"
+        }),
+    )
+
     class Meta:
         model = Subscriber
         fields = ["email_to", "author_id"]
-
         widgets = {
             "email_to": TextInput(attrs={
                 "required": "required",
@@ -39,9 +46,5 @@ class SubscribeForm(ModelForm):
                 "placeholder": "Your email",
                 # "pattern": "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                 # Валидация через HTML. Пишут не надежная...? Пока оставлю серверную валидацию мыла, эту закомменчу.
-            }),
-            "author_id": Select(attrs={
-                "required": "required",
-                "class": "form-control",
             }),
         }

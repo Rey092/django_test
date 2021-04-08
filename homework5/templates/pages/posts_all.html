@@ -8,7 +8,7 @@
 
 {% block content %}
     <div style="padding-top: 20px; padding-bottom: 10px" class="container">
-        <table class="table table-striped table-dark table-bordered">
+        <table class="table table-hover table-striped table-dark table-bordered">
             <thead>
             <tr>
                 <th scope="col">Title</th>
@@ -21,7 +21,7 @@
             <tbody>
             {% for post in posts %}
                 <tr>
-                    <td>{{ post.title }}</td>
+                    <td><a href="{% url 'post_show' post_id=post.id %}">{{ post.title }}</a></td>
                     <td>{{ post.description }}</td>
                     <td>{{ post.content }}</td>
                     <td>{{ post.created }}</td>

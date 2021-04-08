@@ -24,6 +24,7 @@ class Author(models.Model):
 class Subscriber(models.Model):
     class Meta:
         unique_together = [("email_to", "author_id")]
+        ordering = ['-id']
 
     email_to = models.EmailField("Subscriber email", max_length=100)
     author_id = models.ForeignKey("Author", on_delete=models.CASCADE)
