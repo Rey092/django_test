@@ -35,5 +35,8 @@ migrate:
 	python $(manage.py) makemigrations
 	python $(manage.py) migrate
 
+check:
+	python $(manage.py) check
+
 migrations-dry:
 	python $(manage.py) makemigrations --dry-run
