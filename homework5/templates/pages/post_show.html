@@ -1,0 +1,35 @@
+{% extends "elements/base.html" %}
+
+
+{% block title %}
+Posts
+{% endblock %}
+
+
+{% block content %}
+<div style="padding-top: 20px; padding-bottom: 10px" class="container">
+{% for data in post %}
+    <div class="jumbotron">
+        <h1 class="display-4">Title: {{ data.title }}</h1>
+        <p class="lead">Content: {{ data.content }}</p>
+        <p class="lead">Author: {{ data.author_id }}</p>
+        <hr class="my-4">
+        <p>Description: {{ data.description }}</p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{% url 'post_update' post_id=data.id %}" role="button">Edit Post</a>
+        </p>
+    </div>
+{% endfor %}
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+{% endblock %}

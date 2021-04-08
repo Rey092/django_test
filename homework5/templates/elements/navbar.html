@@ -1,36 +1,53 @@
-<div class="container">
-    <nav class="navbar navbar-expand-lg navbar-dark  bg-dark">
-        <a class="navbar-brand" style="padding-left: 15px" href="{% url 'home' %}">Homework 5</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="padding-left: 15px" href="{% url 'home' %}">Homework</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'about' %}">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'posts' %}">Posts</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'post_create' %}">Create Post</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'api_posts' %}">Posts API</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'posts_subscribe' %}">Subscribe</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'api_subscribe' %}">Author subscribe</a>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0 d-none">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
-    </nav>
-</div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'about' %}">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'post_create' %}">Create Post</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'post_update' 4 %}">Update Post</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'posts_all' %}">All Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'subscribers_new' %}">Subscribe</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'subscribers_all' %}">All Subscribers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'authors_new' %}">New Author</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'authors_all' %}">All Authors</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    API
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'api_subscribe' %}">API New Subscriber</a>
+                    <a class="dropdown-item" href="{% url 'api_authors_new' %}">Api New Author</a>
+                    <a class="dropdown-item" href="{% url 'api_posts' %}">API Posts</a>
+                    <!--                    <div class="dropdown-divider"></div>-->
+                    <!--                    <a class="dropdown-item" href="#">Something else here</a>-->
+                </div>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0 d-none">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
