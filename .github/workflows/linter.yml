@@ -23,6 +23,10 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: flake8 .
+    - name: Django migrate
+      run: python homework5/manage.py migrate
+    - name: Django migrations
+      run: python homework5/manage.py makemigrations
     - name: Django runserver
       run: python homework5/manage.py runserver
     - name: Django check
