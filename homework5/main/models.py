@@ -32,6 +32,15 @@ class Subscriber(models.Model):
     def __str__(self):
         return self.email_to
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'email_to': self.email_to,
+            'author_id': self.author_id.id,
+            'author_name': self.author_id.name,
+            'author_email': self.author_id.email,
+        }
+
 
 class Post(models.Model):
     class Meta:
@@ -51,8 +60,12 @@ class Post(models.Model):
     def serialize(self):
         return {
             'id': self.id,
+            'author_id': self.author_id.id,
+            'author_name': self.author_id.name,
+            'author_email': self.author_id.email,
             'title': self.title,
             'description': self.description,
             'content': self.content,
             'created': self.created,
+            'updated': self.updated,
         }

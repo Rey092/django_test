@@ -21,4 +21,4 @@ def get_author(request):
 
 
 def get_all_subscribers():
-    return Subscriber.objects.all()
+    return Subscriber.objects.all().select_related('author_id')

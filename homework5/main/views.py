@@ -1,28 +1,21 @@
-from django.conf import settings
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from faker import Faker
 
 from .forms import PostForm, SubscribeForm
-from .models import Author, Post
+from .models import Author
 from .services.authors_service import get_all_authors
 from .services.notify_service import notify
-from .services.post_service import post_find, posts_all, posts_by_author
+from .services.post_service import get_all_posts, post_get, posts_by_author
 from .services.subscribe_service import get_all_subscribers, get_author, subscribe
 
-ALLOWED_HOSTS = settings.ALLOWED_HOSTS
-
-
-def home_view(request):
-    return render(request, "pages/home.html")
-
-
-def about(request):
-    return render(request, "pages/about.html")
+# -----------------------------------------------------------
+# view functions for posts - models: Post, Author
+# -----------------------------------------------------------
 
 
 def posts(request):
-    return render(request, "pages/posts_all.html", {"posts": posts_all()})
+    return render(request, "pages/posts_all.html", {"posts": get_all_posts()})
 
 
 def author_posts(request, author_id):
@@ -34,7 +27,7 @@ def post_create(request):
         form = PostForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("posts")
+            return redirect("posts_all")
     else:
         form = PostForm()
 
@@ -42,12 +35,12 @@ def post_create(request):
 
 
 def post_show(request, post_id):
-    post = post_find(post_id)
+    post = post_get(post_id)
     return render(request, 'pages/post_show.html', context={"post": post})
 
 
 def post_update(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
+    post = post_get(post_id)
     err = ""
     if request.method == "POST":
         form = PostForm(instance=post, data=request.POST)
@@ -64,8 +57,22 @@ def post_update(request, post_id):
     }
     return render(request, "pages/post_edit.html", context=context)
 
+# -----------------------------------------------------------
+# view functions for authors - models: Author, Subscriber
+# -----------------------------------------------------------
 
-def subscribers_new(request):
+
+def authors_new(request):
+    faker = Faker()
+    Author(name=faker.name(), email=faker.email()).save()
+    return redirect("authors_all")
+
+
+def authors_all(request):
+    return render(request, "pages/authors.html", {"authors": get_all_authors()})
+
+
+def author_subscribe(request):
     if request.method == "POST":
         form = SubscribeForm(request.POST)
         if form.is_valid():
@@ -81,22 +88,21 @@ def subscribers_new(request):
     return render(request, "pages/subscribe.html", context={"form": form})
 
 
-def subscribers_all(request):
+def author_subscribers_all(request):
     return render(request, "pages/subscribers.html", {"subscribers": get_all_subscribers()})
 
-
-def authors_all(request):
-    return render(request, "pages/authors.html", {"authors": get_all_authors()})
-
-
-def authors_new(request):
-    faker = Faker()
-    Author(name=faker.name(), email=faker.email()).save()
-    return redirect("authors_all")
+# -----------------------------------------------------------
+# view functions for API - models: Author, Subscriber, Post
+# -----------------------------------------------------------
 
 
-def api_posts(request):
-    data = [post.serialize() for post in posts_all()]
+def json_posts(request):
+    data = [post.serialize() for post in get_all_posts()]
+    return JsonResponse(data, safe=False)
+
+
+def api_post_show(request, post_id=1):
+    data = post_get(post_id).serialize()
     return JsonResponse(data, safe=False)
 
 
@@ -108,6 +114,16 @@ def api_subscribe(request):
     notify(email_to)
 
     return HttpResponse(f"You are subscribed on {author}")
+
+
+def api_subscribers_all(request):
+    data = [subscriber.serialize() for subscriber in get_all_subscribers()]
+    return JsonResponse(data, safe=False)
+
+
+def api_authors_all(request):
+    data = [author.serialize() for author in get_all_authors()]
+    return JsonResponse(data, safe=False)
 
 
 def api_authors_new(request):
