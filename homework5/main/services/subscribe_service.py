@@ -18,3 +18,7 @@ def get_author(request):
         author_id = request.GET["author_id"]
     author = get_object_or_404(Author, pk=author_id)
     return author
+
+
+def get_all_subscribers():
+    return Subscriber.objects.all().select_related('author_id')

@@ -1,29 +1,25 @@
-from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from faker import Faker
 
 from .forms import PostForm, SubscribeForm
+from .models import Author
+from .services.authors_service import get_all_authors
 from .services.notify_service import notify
-from .services.post_service import posts_all, posts_by_author
-from .services.subscribe_service import get_author, subscribe
+from .services.post_service import get_all_posts, post_get, posts_by_author
+from .services.subscribe_service import get_all_subscribers, get_author, subscribe
 
-ALLOWED_HOSTS = settings.ALLOWED_HOSTS
-
-
-def home_view(request):
-    return render(request, "pages/home.html")
-
-
-def about(request):
-    return render(request, "pages/about.html")
+# -----------------------------------------------------------
+# view functions for posts - models: Post, Author
+# -----------------------------------------------------------
 
 
 def posts(request):
-    return render(request, "pages/post.html", {"posts": posts_all()})
+    return render(request, "pages/posts_all.html", {"posts": get_all_posts()})
 
 
 def author_posts(request, author_id):
-    return render(request, "pages/post.html", {"posts": posts_by_author(author_id)})
+    return render(request, "pages/posts_all.html", {"posts": posts_by_author(author_id)})
 
 
 def post_create(request):
@@ -31,29 +27,52 @@ def post_create(request):
         form = PostForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("posts")
+            return redirect("posts_all")
     else:
         form = PostForm()
 
     return render(request, "pages/post_create.html", context={'form': form})
 
 
-def api_posts(request):
-    data = [post.serialize() for post in posts_all()]
-    return JsonResponse(data, safe=False)
+def post_show(request, post_id):
+    post = post_get(post_id)
+    return render(request, 'pages/post_show.html', context={"post": post})
 
 
-def api_subscribe(request):
-    email_to = request.GET["email_to"]
-    author = get_author(request)
+def post_update(request, post_id):
+    post = post_get(post_id)
+    err = ""
+    if request.method == "POST":
+        form = PostForm(instance=post, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("posts_all")
+        else:
+            err = "error on update post"
+    else:
+        form = PostForm(instance=post)
+    context = {
+        "form": form,
+        "err": err,
+    }
+    return render(request, "pages/post_edit.html", context=context)
 
-    subscribe(author, email_to)
-    notify(email_to)
+# -----------------------------------------------------------
+# view functions for authors - models: Author, Subscriber
+# -----------------------------------------------------------
 
-    return HttpResponse(f"You are subscribed on {author}")
+
+def authors_new(request):
+    faker = Faker()
+    Author(name=faker.name(), email=faker.email()).save()
+    return redirect("authors_all")
 
 
-def posts_subscribe(request):
+def authors_all(request):
+    return render(request, "pages/authors.html", {"authors": get_all_authors()})
+
+
+def author_subscribe(request):
     if request.method == "POST":
         form = SubscribeForm(request.POST)
         if form.is_valid():
@@ -67,3 +86,48 @@ def posts_subscribe(request):
         form = SubscribeForm()
 
     return render(request, "pages/subscribe.html", context={"form": form})
+
+
+def author_subscribers_all(request):
+    return render(request, "pages/subscribers.html", {"subscribers": get_all_subscribers()})
+
+# -----------------------------------------------------------
+# view functions for API - models: Author, Subscriber, Post
+# -----------------------------------------------------------
+
+
+def json_posts(request):
+    data = [post.serialize() for post in get_all_posts()]
+    return JsonResponse(data, safe=False)
+
+
+def api_post_show(request, post_id=1):
+    data = post_get(post_id).serialize()
+    return JsonResponse(data, safe=False)
+
+
+def api_subscribe(request):
+    email_to = request.GET["email_to"]
+    author = get_author(request)
+
+    subscribe(author, email_to)
+    notify(email_to)
+
+    return HttpResponse(f"You are subscribed on {author}")
+
+
+def api_subscribers_all(request):
+    data = [subscriber.serialize() for subscriber in get_all_subscribers()]
+    return JsonResponse(data, safe=False)
+
+
+def api_authors_all(request):
+    data = [author.serialize() for author in get_all_authors()]
+    return JsonResponse(data, safe=False)
+
+
+def api_authors_new(request):
+    faker = Faker()
+    Author(name=faker.name(), email=faker.email()).save()
+    authors = Author.objects.all().values("name", "email")
+    return JsonResponse(list(authors), safe=False)

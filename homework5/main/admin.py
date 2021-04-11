@@ -4,7 +4,7 @@ from .models import Author, Post, Subscriber
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'description', 'content', 'created']
+    list_display = ["id", 'title', 'description', 'content', 'created']
     search_fields = ['title', 'description', 'content']
 
     class Meta:

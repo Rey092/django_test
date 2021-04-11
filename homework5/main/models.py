@@ -24,12 +24,22 @@ class Author(models.Model):
 class Subscriber(models.Model):
     class Meta:
         unique_together = [("email_to", "author_id")]
+        ordering = ['-id']
 
     email_to = models.EmailField("Subscriber email", max_length=100)
     author_id = models.ForeignKey("Author", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.email_to
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'email_to': self.email_to,
+            'author_id': self.author_id.id,
+            'author_name': self.author_id.name,
+            'author_email': self.author_id.email,
+        }
 
 
 class Post(models.Model):
@@ -50,8 +60,12 @@ class Post(models.Model):
     def serialize(self):
         return {
             'id': self.id,
+            'author_id': self.author_id.id,
+            'author_name': self.author_id.name,
+            'author_email': self.author_id.email,
             'title': self.title,
             'description': self.description,
             'content': self.content,
             'created': self.created,
+            'updated': self.updated,
         }

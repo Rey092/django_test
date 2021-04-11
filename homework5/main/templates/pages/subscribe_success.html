@@ -1,0 +1,12 @@
+{% extends "elements/base.html" %}
+
+<div class="container">
+{% block title %}
+    Subscribe success
+{% endblock %}
+
+
+{% block content %}
+ Вы подписаны на автора - {{ author_name }}. <a href="{% url 'posts_by_author' author_id %}">Читать все статьи автора</a>
+{% endblock %}
+</div>

@@ -17,6 +17,14 @@ flake8-install:
 	flake8 --install-hook git
 	git config --bool flake8.strict true
 
+debugger-install:
+	python -m pip install django-debug-toolbar
+	# 'debug_toolbar'                                    | add to the INSTALLED_APPS in settings.py
+	# debug_toolbar.middleware.DebugToolbarMiddleware    | add to the MIDDLEWARE in settings.py
+	# INTERNAL_IPS = [ "127.0.0.1", ]					 | create in the settings.py
+	# path('__debug__/', include(debug_toolbar.urls))    | add to the urls.py in project DIR
+	# import debug_toolbar                               | add to the urls.py in project DIR
+
 run:
 	python $(manage.py) runserver
 
@@ -26,3 +34,9 @@ kill-port:
 migrate:
 	python $(manage.py) makemigrations
 	python $(manage.py) migrate
+
+check:
+	python $(manage.py) check
+
+migrations-dry:
+	python $(manage.py) makemigrations --dry-run
