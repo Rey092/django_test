@@ -2,11 +2,11 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from faker import Faker
 
-from .forms import PostForm, SubscribeForm
-from .models import Author
+from .forms import CommentForm, PostForm, SubscribeForm
+from .models import Author, Comment
 from .services.authors_service import get_all_authors
 from .services.notify_service import notify
-from .services.post_service import get_all_posts, post_get, posts_by_author
+from .services.post_service import get_all_posts, get_comments_for_post, post_get, posts_by_author
 from .services.subscribe_service import get_all_subscribers, get_author, subscribe
 
 # -----------------------------------------------------------
@@ -36,7 +36,19 @@ def post_create(request):
 
 def post_show(request, post_id):
     post = post_get(post_id)
-    return render(request, 'pages/post_show.html', context={"post": post})
+    comments = get_comments_for_post(post_id)
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        Comment(content=form.cleaned_data['content'], post_id=post).save()
+        return redirect("post_show", post_id)
+    else:
+        form = CommentForm()
+    context = {
+        "post": post,
+        "form": form,
+        "comments": comments
+    }
+    return render(request, 'pages/post_show.html', context=context)
 
 
 def post_update(request, post_id):

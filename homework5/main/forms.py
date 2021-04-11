@@ -1,6 +1,6 @@
-from django.forms import ModelChoiceField, ModelForm, Select, TextInput
+from django.forms import ModelChoiceField, ModelForm, Select, Textarea, TextInput
 
-from .models import Author, Post, Subscriber
+from .models import Author, Comment, Post, Subscriber
 
 
 class PostForm(ModelForm):
@@ -46,5 +46,18 @@ class SubscribeForm(ModelForm):
                 "placeholder": "Your email",
                 # "pattern": "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                 # Валидация через HTML. Пишут не надежная...? Пока оставлю серверную валидацию мыла, эту закомменчу.
+            }),
+        }
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["content"]
+        widgets = {
+            "content": Textarea(attrs={
+                "class": "form-control",
+                "placeholder": "Input text",
+                "rows": 3,
             }),
         }

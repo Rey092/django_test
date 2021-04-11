@@ -69,3 +69,23 @@ class Post(models.Model):
             'created': self.created,
             'updated': self.updated,
         }
+
+
+class Comment(models.Model):
+    class Meta:
+        ordering = ['-id']
+
+    content = models.TextField("Post content", max_length=500)
+    created = models.DateTimeField(auto_now_add=True)
+    post_id = models.ForeignKey("Post", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.content
+
+
+class Logger(models.Model):
+    path = models.CharField(max_length=100)
+    user_ip = models.GenericIPAddressField(max_length=20)
+    time_execution = models.DecimalField(max_digits=10, decimal_places=7)
+    utm = models.CharField(max_length=500, null=True)
+    created = models.DateTimeField(auto_now_add=True)
