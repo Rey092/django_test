@@ -1,12 +1,12 @@
 """Настройки маршрутизатора."""
-
+from django.conf.urls import url
 from django.urls import path
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 
 from . import views
 
 urlpatterns = [
-    # url(r'^favicon\.ico$', RedirectView.as_view(url='static/assets/img/favicon/favicon.ico')),
+    url(r'^favicon\.ico$', RedirectView.as_view(url='static/assets/img/favicon/favicon.ico')),
     path('', TemplateView.as_view(template_name='pages/home.html'), name='home_page'),
     path('about/', TemplateView.as_view(template_name='pages/about.html'), name='about_page'),
 

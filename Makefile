@@ -25,6 +25,14 @@ debugger-install:
 	# path('__debug__/', include(debug_toolbar.urls))    | add to the urls.py in project DIR
 	# import debug_toolbar                               | add to the urls.py in project DIR
 
+extensions-install:
+	python pip install django-extensions
+	python pip install ipython
+	# 'django_extensions'                                | add to the INSTALLED_APPS in settings.py
+
+shell: # only after 'make extensions-install'
+	python $(manage.py) shell_plus --print-sql
+
 run:
 	python $(manage.py) runserver
 
@@ -40,3 +48,12 @@ check:
 
 migrations-dry:
 	python $(manage.py) makemigrations --dry-run
+
+#  Signals
+#
+#
+#
+#
+#
+#
+#

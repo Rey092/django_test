@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Author, Post, Subscriber
+from .models import Author, Logger, Post, Subscriber
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -26,6 +26,14 @@ class SubscriberAdmin(admin.ModelAdmin):
         model = Subscriber
 
 
+class LoggerAdmin(admin.ModelAdmin):
+    list_display = ['path', 'user_ip', 'time_execution', 'utm', 'created']
+
+    class Meta:
+        model = Logger
+
+
 admin.site.register(Post, PostAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Subscriber, SubscriberAdmin)
+admin.site.register(Logger, LoggerAdmin)

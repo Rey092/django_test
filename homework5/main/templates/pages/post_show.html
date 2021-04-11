@@ -7,7 +7,7 @@ Posts
 
 
 {% block content %}
-<div style="padding-top: 20px; padding-bottom: 10px" class="container">
+<div style="padding-top: 20px" class="container">
     <div class="jumbotron">
         <h1 class="display-4">Title: {{ post.title }}</h1>
         <p class="lead">Content: {{ post.content }}</p>
@@ -18,15 +18,51 @@ Posts
             <a class="btn btn-primary btn-lg" href="{% url 'post_update' post_id=post.id %}" role="button">Edit Post</a>
         </p>
     </div>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        </tbody>
-    </table>
 </div>
+
+<div style="width:600px" class="container">
+    <form method="post">
+        <h2 class="text-center"><strong>Leave</strong> Your Feedback</h2>
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            {% if field.errors %}
+            {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {{ field }}
+        </div>
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        <div class="form-group">
+            <button class="btn btn-primary btn-block" type="submit">Send a comment</button>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <div style="font-size: 1.2em;"><p style="text-align: center;">
+        <strong>Comments:</strong>
+    </p></div>
+</div>
+
+<div style="padding-left: 10px; padding-right:10px" class="container">
+    {% if comments %}
+    {% for comment in comments %}
+    <div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4 kick' style="background-color: rgba(255, 255, 255, 0.7);
+font-size: 1.2em; "><p>{{ comment.content }}
+    </p>
+        <div class='btn-group'></div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+
 {% endblock %}

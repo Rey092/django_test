@@ -4,6 +4,7 @@ from django.apps import AppConfig
 
 
 class MainConfig(AppConfig):
-    """Config class."""
-
     name = 'main'
+
+    def ready(self):
+        import main.signals  # noqa
