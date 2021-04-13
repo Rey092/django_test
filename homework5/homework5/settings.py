@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
+from celery.schedules import crontab
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -16,6 +18,23 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Celery Config
+CELERY_BROKEN_URL = 'amqp://localhost'
+
+CELERY_TIMEZONE = 'Europe/Kiev'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_BEAT_SCHEDULE = {
+    'delete_logs_async': {
+        'task': 'main.tasks.delete_logs_async',
+        'schedule': crontab(minute=0, hour=1),
+    },
+    'send_email_to_all_subscribers': {
+        'task': 'main.tasks.send_email_to_all_subscribers',
+        'schedule': crontab(minute=0, hour=9),
+    },
+}
 
 # Application definition
 
@@ -119,3 +138,13 @@ STATIC_URL = '/static/'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+# GMAIL
+# https://www.google.com/settings/security/lesssecureapps
+EMAIL_HOST_USER = 'worker2plsdontban@gmail.com'
+EMAIL_HOST_PASSWORD = 'xt,ehfnjh-0'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

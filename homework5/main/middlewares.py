@@ -11,13 +11,17 @@ class LogMiddleware:
     def __call__(self, request):
         st = time()
         response = self.get_response(request)
+
+        path = request.path
+        user_ip = get_client_ip(request)
         time_execution = time() - st
+        utm = request.GET.get('utm')
 
         Logger(
-            path=request.path,
-            user_ip=get_client_ip(request),
+            path=path,
+            user_ip=user_ip,
             time_execution=time_execution,
-            utm=request.GET.get('utm'),
+            utm=utm,
         ).save()
 
         return response
