@@ -11,20 +11,22 @@ urlpatterns = [
     path('about/', TemplateView.as_view(template_name='pages/about.html'), name='about_page'),
 
     path('posts/', views.posts, name='posts_all'),
-    path('posts/<int:author_id>', views.author_posts, name='posts_by_author'),
-    path('post/create', views.post_create, name='post_create'),
-    path('post/show/<int:post_id>', views.post_show, name='post_show'),
-    path('posts/update/<int:post_id>', views.post_update, name='post_update'),
+    path('posts/<int:author_id>/', views.author_posts, name='posts_by_author'),
+    path('post/create/', views.post_create, name='post_create'),
+    path('post/show/<int:post_id>/', views.post_show, name='post_show'),
+    path('posts/update/<int:post_id>/', views.post_update, name='post_update'),
 
-    path('authors/new', views.authors_new, name='authors_new'),
-    path('authors/all', views.authors_all, name='authors_all'),
-    path('author/subscribe', views.author_subscribe, name='author_subscribe'),
-    path('author/subscribers/all', views.author_subscribers_all, name='author_subscribers_all'),
+    path('authors/new/', views.authors_new, name='authors_new'),
+    path('authors/all/', views.authors_all, name='authors_all'),
+    path('author/subscribe/', views.author_subscribe, name='author_subscribe'),
+    path('author/subscribers/all/', views.author_subscribers_all, name='author_subscribers_all'),
 
-    path('api/posts', views.json_posts, name='json_posts'),
-    path('api/post/<int:post_id>', views.api_post_show, name='api_post_show'),
-    path('api/subscribe', views.api_subscribe, name='api_subscribe'),
-    path('api/subscribers/all', views.api_subscribers_all, name='api_subscribers_all'),
-    path('api/authors/all', views.api_authors_all, name='api_authors_all'),
-    path('api/authors/new', views.api_authors_new, name='api_authors_new'),
+    path('api/posts/', views.json_posts, name='json_posts'),
+    path('api/post/<int:post_id>/', views.api_post_show, name='api_post_show'),
+    path('api/subscribe/', views.api_subscribe, name='api_subscribe'),
+    path('api/subscribers/all/', views.api_subscribers_all, name='api_subscribers_all'),
+    path('api/authors/all/', views.api_authors_all, name='api_authors_all'),
+    path('api/authors/new/', views.api_authors_new, name='api_authors_new'),
+
+    path('logs_delete/', views.test, name='test')
 ]

@@ -6,13 +6,13 @@ from .models import Author
 
 @receiver(pre_save, sender=Author)
 def author_pre_save(sender, instance, *args, **kwargs):
-    print("pre-save-------------")
-    instance.name = "Karl"
+    # print("pre-save-------------")
+    # instance.name = "Karl"
+    pass
 
 
 @receiver(post_save, sender=Author)
 def author_post_save(sender, instance, created, *args, **kwargs):
-    print("post-save-------------")
     if created:
         print('Author created')
     else:

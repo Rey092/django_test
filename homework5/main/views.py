@@ -1,3 +1,5 @@
+from time import time
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from faker import Faker
@@ -5,9 +7,10 @@ from faker import Faker
 from .forms import CommentForm, PostForm, SubscribeForm
 from .models import Author, Comment
 from .services.authors_service import get_all_authors
-from .services.notify_service import notify
-from .services.post_service import get_all_posts, get_comments_for_post, post_get, posts_by_author
+from .services.post_service import get_all_posts, get_comments_for_post, get_post, posts_by_author
 from .services.subscribe_service import get_all_subscribers, get_author, subscribe
+from .tasks import notify_async, send_email_to_all_subscribers
+
 
 # -----------------------------------------------------------
 # view functions for posts - models: Post, Author
@@ -35,7 +38,7 @@ def post_create(request):
 
 
 def post_show(request, post_id):
-    post = post_get(post_id)
+    post = get_post(post_id)
     comments = get_comments_for_post(post_id)
     form = CommentForm(request.POST or None)
     if form.is_valid():
@@ -52,7 +55,7 @@ def post_show(request, post_id):
 
 
 def post_update(request, post_id):
-    post = post_get(post_id)
+    post = get_post(post_id)
     err = ""
     if request.method == "POST":
         form = PostForm(instance=post, data=request.POST)
@@ -68,6 +71,7 @@ def post_update(request, post_id):
         "err": err,
     }
     return render(request, "pages/post_edit.html", context=context)
+
 
 # -----------------------------------------------------------
 # view functions for authors - models: Author, Subscriber
@@ -85,23 +89,26 @@ def authors_all(request):
 
 
 def author_subscribe(request):
-    if request.method == "POST":
-        form = SubscribeForm(request.POST)
-        if form.is_valid():
-            form.save()
+    form = SubscribeForm(request.POST or None)
 
-            author = get_author(request)
-            context = author.serialize()
+    if form.is_valid():
+        form.save()
 
-            return render(request, "pages/subscribe_success.html", context=context)
-    else:
-        form = SubscribeForm()
+        author = get_author(request)
+        email_to = request.POST.get('email_to')
+
+        notify_async.delay(email_to, author.name)
+        # notify_async.apply_async(args=(email_to, author.name), countdown=5)
+
+        context = author.serialize()
+        return render(request, "pages/subscribe_success.html", context=context)
 
     return render(request, "pages/subscribe.html", context={"form": form})
 
 
 def author_subscribers_all(request):
     return render(request, "pages/subscribers.html", {"subscribers": get_all_subscribers()})
+
 
 # -----------------------------------------------------------
 # view functions for API - models: Author, Subscriber, Post
@@ -114,7 +121,7 @@ def json_posts(request):
 
 
 def api_post_show(request, post_id=1):
-    data = post_get(post_id).serialize()
+    data = get_post(post_id).serialize()
     return JsonResponse(data, safe=False)
 
 
@@ -123,7 +130,7 @@ def api_subscribe(request):
     author = get_author(request)
 
     subscribe(author, email_to)
-    notify(email_to)
+    notify_async(email_to, author.name)
 
     return HttpResponse(f"You are subscribed on {author}")
 
@@ -143,3 +150,12 @@ def api_authors_new(request):
     Author(name=faker.name(), email=faker.email()).save()
     authors = Author.objects.all().values("name", "email")
     return JsonResponse(list(authors), safe=False)
+
+
+def test(request):
+    st = time()
+    print('----start')
+    send_email_to_all_subscribers.delay()
+    time_exec = time() - st
+    print(f'----finish. time_exec: {time_exec}')
+    return redirect('about_page')

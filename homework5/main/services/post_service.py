@@ -10,7 +10,7 @@ def posts_by_author(author_id):
     return Post.objects.filter(author_id=author_id)
 
 
-def post_get(post_id):
+def get_post(post_id):
     return get_object_or_404(Post, pk=post_id)
 
 
