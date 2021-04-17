@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from faker import Faker
 
 from .forms import CommentForm, PostForm, SubscribeForm
-from .models import Author, Comment
+from .models import Author, Book, Category, Comment
 from .services.authors_service import get_all_authors
 from .services.post_service import get_all_posts, get_comments_for_post, get_post, posts_by_author
 from .services.subscribe_service import get_all_subscribers, get_author, subscribe
@@ -85,11 +85,15 @@ def authors_new(request):
 
 
 def authors_all(request):
-    return render(request, "pages/authors.html", {"authors": get_all_authors()})
+    context = {
+        "authors": Author.objects.all().prefetch_related("books")
+    }
+    return render(request, "pages/authors.html", context=context)
 
 
 def author_subscribe(request):
     form = SubscribeForm(request.POST or None)
+    # , initial = {'author_id': 1}
 
     if form.is_valid():
         form.save()
@@ -109,6 +113,23 @@ def author_subscribe(request):
 def author_subscribers_all(request):
     return render(request, "pages/subscribers.html", {"subscribers": get_all_subscribers()})
 
+# -----------------------------------------------------------
+# view functions for Books and Categories - models: Book, Category
+# -----------------------------------------------------------
+
+
+def books_all(request):
+    context = {
+        "books": Book.objects.all().only("title", "category_id__title").select_related("category_id")
+    }
+    return render(request, "pages/books.html", context=context)
+
+
+def categories_all(request):
+    context = {
+        "categories": Category.objects.all().prefetch_related("books")
+    }
+    return render(request, "pages/categories.html", context=context)
 
 # -----------------------------------------------------------
 # view functions for API - models: Author, Subscriber, Post

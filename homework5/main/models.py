@@ -21,6 +21,22 @@ class Author(models.Model):
         }
 
 
+class Book(models.Model):
+    title = models.CharField("Book title", max_length=100)
+    author_id = models.ForeignKey("Author", models.CASCADE, related_name="books")
+    category_id = models.ForeignKey("Category", models.CASCADE, related_name="books")
+
+    def __str__(self):
+        return self.title
+
+
+class Category(models.Model):
+    title = models.CharField("Category name", max_length=100)
+
+    def __str__(self):
+        return self.title
+
+
 class Subscriber(models.Model):
     class Meta:
         unique_together = [("email_to", "author_id")]

@@ -2,17 +2,13 @@
 
 
 {% block title %}
-    {{ title }}
+    Create Post
 {% endblock %}
 
 
 {% block content %}
-
     <div class="container">
         <h1>Posts</h1>
-        <div class="error">
-            {{ err }}
-        </div>
         <div class="payLoad">
             <form method="POST">
                 {% csrf_token %}
@@ -25,7 +21,5 @@
                 <button class="btn btn-success">Send Post</button>
             </form>
         </div>
-
     </div>
-
 {% endblock %}
