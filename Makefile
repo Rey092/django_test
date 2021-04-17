@@ -26,6 +26,9 @@ check:
 migrations-dry:
 	python $(manage.py) makemigrations --dry-run
 
+gen-book-category:
+	python $(manage.py) gen_book_category
+
 flake8-install:
 	pip install flake8
 	pip install flake8-import-order # сортировку импортов
@@ -102,3 +105,12 @@ worker-info:
 #
 #
 #
+#        error_messages = {
+#            NON_FIELD_ERRORS: {
+#                'unique_together': "%(model_name)s's %(field_labels)s are not unique.",
+#            },
+#            'email_to': {
+#                'required': "Email field is empty.",
+#                'invalid': "Enter a valid email address.",
+#            },
+#        }

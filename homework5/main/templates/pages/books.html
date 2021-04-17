@@ -12,18 +12,16 @@ Authors
         <thead>
         <tr>
             <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Books count</th>
+            <th scope="col">Title</th>
+            <th scope="col">Category</th>
         </tr>
         </thead>
         <tbody>
-        {% for author in authors %}
+        {% for book in books %}
         <tr>
-            <td>{{ author.id }}</td>
-            <td>{{ author.name }}</td>
-            <td>{{ author.email }}</td>
-            <td>{{ author.books.count }}</td>
+            <td>{{ book.id }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.category_id.title }}</td>
         </tr>
         {% endfor %}
         </tbody>

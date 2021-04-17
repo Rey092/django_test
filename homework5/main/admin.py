@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Author, Logger, Post, Subscriber
+from .models import Author, Book, Category, Logger, Post, Subscriber
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -37,3 +37,6 @@ admin.site.register(Post, PostAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Subscriber, SubscriberAdmin)
 admin.site.register(Logger, LoggerAdmin)
+
+admin.site.register(Book)
+admin.site.register(Category)
