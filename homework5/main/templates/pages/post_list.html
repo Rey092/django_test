@@ -19,7 +19,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for post in posts %}
+            {% for post in post_list %}
                 <tr>
                     <td><a href="{% url 'post_show' post_id=post.id %}">{{ post.title }}</a></td>
                     <td>{{ post.description }}</td>

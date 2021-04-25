@@ -38,8 +38,10 @@ prompt-toolkit==3.0.18
 ptyprocess==0.7.0
 pycodestyle==2.7.0
 pydocstyle==6.0.0
+pydotplus==2.0.2
 pyflakes==2.3.1
 Pygments==2.8.1
+pyparsing==2.4.7
 python-dateutil==2.8.1
 pytz==2021.1
 requests==2.25.1

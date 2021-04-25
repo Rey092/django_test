@@ -108,3 +108,9 @@ class Logger(models.Model):
 
     def __str__(self):
         return self.path
+
+
+class ContactUs(models.Model):
+    email = models.EmailField()
+    subject = models.CharField(max_length=150)
+    message = models.TextField()
