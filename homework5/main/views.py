@@ -2,10 +2,13 @@ from time import time
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from django.views.generic.list import ListView
 from faker import Faker
 
 from .forms import CommentForm, PostForm, SubscribeForm
-from .models import Author, Book, Category, Comment
+from .models import Author, Book, Category, Comment, ContactUs
 from .services.authors_service import get_all_authors
 from .services.post_service import get_all_posts, get_comments_for_post, get_post, posts_by_author
 from .services.subscribe_service import get_all_subscribers, get_author, subscribe
@@ -17,12 +20,16 @@ from .tasks import notify_async, send_email_to_all_subscribers
 # -----------------------------------------------------------
 
 
-def posts(request):
-    return render(request, "pages/posts_all.html", {"posts": get_all_posts()})
+# def posts(request):
+#     return render(request, "pages/post_list.html", {"posts": get_all_posts()})
+
+class PostsListView(ListView):
+    queryset = get_all_posts()
+    template_name = 'pages/post_list.html'
 
 
 def author_posts(request, author_id):
-    return render(request, "pages/posts_all.html", {"posts": posts_by_author(author_id)})
+    return render(request, "pages/post_list.html", {"posts": posts_by_author(author_id)})
 
 
 def post_create(request):
@@ -180,3 +187,10 @@ def test(request):
     time_exec = time() - st
     print(f'----finish. time_exec: {time_exec}')
     return redirect('about_page')
+
+
+class CreateContactUsView(CreateView):
+    success_url = reverse_lazy('home_page')
+    model = ContactUs
+    template_name = 'pages/contactus_form.html'
+    fields = ('email', 'subject', 'message')

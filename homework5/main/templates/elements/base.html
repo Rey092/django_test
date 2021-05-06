@@ -8,6 +8,7 @@
     <title>{% block title %} {% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'assets/css/subscribe_form.css' %}?{% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Footer-Dark.css' %}?{% now 'U' %}">
     <link rel="apple-touch-icon" sizes="57x57" href="{% static 'assets/img/favicon' %}/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="{% static 'assets/img/favicon' %}/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="{% static 'assets/img/favicon' %}/apple-icon-72x72.png">
@@ -34,6 +35,13 @@ background: linear-gradient(90deg, rgb(193,190,248) 0%, rgb(184,245,255) 35%, rg
 <div class="container">
     {% block content %} {% endblock %}
 </div>
+
+<body class="d-flex flex-column min-vh-100">
+    <div class="wrapper flex-grow-1"></div>
+    <footer>{% include "elements/footer.html" %}</footer>
+</body>
+
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
