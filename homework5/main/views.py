@@ -10,10 +10,9 @@ from faker import Faker
 from xlsxwriter.workbook import Workbook
 
 from .forms import CommentForm, PostForm, SubscribeForm
-from .models import Author, Book, Category, Comment, ContactUs
+from .models import Author, Book, Category, Comment, ContactUs, Post
 from .services.authors_service import get_all_authors
 from .services.post_service import get_all_posts, get_comments_for_post, get_post, posts_by_author
-from .services.scraper import medusweet_scraper
 from .services.subscribe_service import get_all_subscribers, get_author, subscribe
 from .tasks import notify_async, send_email_to_all_subscribers
 
@@ -37,7 +36,7 @@ def post_create(request):
         form = PostForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("posts_all")
+            return redirect("post_list")
     else:
         form = PostForm()
 
@@ -205,13 +204,20 @@ def medusweet_xlsx(request):
 
     worksheet = workbook.add_worksheet()
     worksheet.set_column('A:A', 30)
-    worksheet.set_column('A:A', 200)
+    worksheet.set_column('B:B', 100)
+    worksheet.write(0, 0, 'Title')
+    worksheet.write(0, 1, 'Content')
     worksheet.set_default_row(70)
 
     cell_format = workbook.add_format()
     cell_format.set_text_wrap()
 
-    medusweet_scraper(worksheet, cell_format)
+    queryset = Post.objects.values('title', 'content')
+    row = 1
+    for obj in queryset.iterator():
+        worksheet.write(row, 0, obj['title'], cell_format)
+        worksheet.write(row, 1, obj['content'], cell_format)
+        row += 1
 
     workbook.close()
     output.seek(0)

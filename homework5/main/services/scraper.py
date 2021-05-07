@@ -5,11 +5,7 @@ from bs4 import BeautifulSoup
 from .request_handler import ProxyRequest
 
 
-def medusweet_scraper(worksheet, cell_format):
-    worksheet.set_column('A:A', 20)
-    worksheet.set_column('B:B', 100)
-    worksheet.write(0, 0, 'Title')
-    worksheet.write(0, 1, 'Content')
+def medusweet_scraper():
 
     request_handler = ProxyRequest()
     super_request = request_handler.get
@@ -30,6 +26,11 @@ def medusweet_scraper(worksheet, cell_format):
         for anchor in anchors:
             article_links.append(anchor['href'])
 
+    result = {
+        'titles': [],
+        'contents': [],
+    }
+
     for article in article_links:
         request = super_request(article)
         if request_handler.status_code == 404:
@@ -42,5 +43,7 @@ def medusweet_scraper(worksheet, cell_format):
         content = soup.find('section', attrs={'class': 'post_content'})
         content_stripped = ' '.join([p.text.strip() for p in content])
 
-        worksheet.write(article_links.index(article) + 1, 0, title, cell_format)
-        worksheet.write(article_links.index(article) + 1, 1, content_stripped, cell_format)
+        result['titles'].append(title)
+        result['contents'].append(content_stripped)
+
+    return result
