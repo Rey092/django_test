@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'main',
+    'account',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +100,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 CACHES = {
     "default": {
@@ -164,3 +166,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+AUTH_USER_MODEL = 'main.Author'

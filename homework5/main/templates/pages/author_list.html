@@ -2,31 +2,50 @@
 
 
 {% block title %}
-Authors
+    Authors
 {% endblock %}
 
 
 {% block content %}
-<div style="padding-top: 20px; padding-bottom: 10px" class="container">
-    <table class="table table-hover table-striped table-dark table-bordered">
-        <thead>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Books count</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for author in author_list %}
-        <tr>
-            <td>{{ author.id }}</td>
-            <td>{{ author.name }}</td>
-            <td>{{ author.email }}</td>
-            <td>{{ author.books.count }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+    <div style="padding-top: 20px; padding-bottom: 10px" class="container">
+        <table class="table table-hover table-striped table-dark table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Books count</th>
+                <th scope="col">Delete Current Author</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for author in author_list %}
+                <tr>
+                    <td>{{ author.id }}</td>
+                    <td>{{ author.name }}</td>
+                    <td>{{ author.email }}</td>
+                    <td>{{ author.books.count }}</td>
+                    <td>
+
+                        {% if authenticated and request.user.id == author.id %}
+                            <form method="POST" action="{% url 'author_delete' pk=author.id %}">
+                                {% csrf_token %}
+                                (<input type="submit" value="Delete"/>)
+                            </form>
+                        {% elif authenticated %}
+                            "You can't delete other Author's"
+                        {% endif %}
+                        {% if not authenticated %}
+                            "You are not authenticated"
+                        {% endif %}
+
+                    </td>
+                </tr>
+            {% endfor %}
+
+
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

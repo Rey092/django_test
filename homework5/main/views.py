@@ -3,7 +3,7 @@ from time import time
 
 from django.core.cache import cache
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.views.generic.list import ListView
@@ -69,18 +69,29 @@ def post_show(request, post_id):
 def post_update(request, post_id):
     post = get_post(post_id)
     err = ""
+    authenticated = False
+
+    if request.user.is_authenticated:
+        if request.user.id == post.author_id.id:
+            authenticated = True
+
     if request.method == "POST":
         form = PostForm(instance=post, data=request.POST)
-        if form.is_valid():
-            form.save()
+        if form.is_valid() and authenticated:
+            if request.POST.get('delete'):
+                form.instance.delete()
+            else:
+                form.save()
             return redirect("post_list")
         else:
-            err = "error on update post"
+            err = "error on update or delete post"
     else:
         form = PostForm(instance=post)
+
     context = {
         "form": form,
         "err": err,
+        "authenticated": authenticated
     }
     return render(request, "pages/post_edit.html", context=context)
 
@@ -91,8 +102,12 @@ def post_update(request, post_id):
 
 
 def authors_new(request):
+    # manager = UserProfileManager()
     faker = Faker()
-    Author(name=faker.name(), email=faker.email()).save()
+
+    # Author(name=faker.name(), email=faker.email(), password='qwerty').save()
+    Author.objects.create_user(email=faker.email(), name=faker.name(), password='qwerty')
+
     return redirect("author_list")
 
 
@@ -105,6 +120,44 @@ class AuthorsListView(ListView):
             authors_list_qs = Author.objects.all().prefetch_related("books")
             cache.set('authors_list_qs', authors_list_qs)
         return authors_list_qs
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorsListView, self).get_context_data(**kwargs)
+        authenticated = True if self.request.user.is_authenticated else False
+        context['authenticated'] = authenticated
+        return context
+
+
+# def authors_all(request):
+#     authenticated = False
+#
+#     if request.user.is_authenticated:
+#         author = Author.objects.filter(id=request.user.id)[0]
+#         if request.user.id == author.id:
+#             authenticated = True
+#         if authenticated and request.POST.get('delete'):
+#             author.delete()
+#             return redirect("post_list")
+#
+#     authors_qs = cache.get('authors_list_qs')
+#     if not authors_qs:
+#         authors_qs = Author.objects.all().prefetch_related("books")
+#         cache.set('authors_list_qs', authors_qs)
+#
+#     context = {
+#         "authors_qs": authors_qs,
+#         "authenticated": authenticated
+#     }
+#     return render(request, "pages/author_list.html", context=context)
+
+
+def remove_obj(request, pk):
+    obj = get_object_or_404(Author, id=pk)
+
+    if request.user.id == obj.id:
+        obj.delete()
+
+    return redirect("author_list")
 
 
 def author_subscribe(request):
