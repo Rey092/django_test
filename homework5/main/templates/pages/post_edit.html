@@ -26,12 +26,11 @@
                 {{ form.author_id }}
                 <br>
                 {% if authenticated %}
-
-
+                    <button class="btn btn-success">Edit Post</button>
+                    <button class="btn btn-default btn-danger" name="delete" type="submit" value="Delete post">Delete
+                        Post
+                    </button>
                 {% endif %}
-            </form>
-            <form method="post">
-                <button type="button" name="delete" id="submit_me">Delete</button>
             </form>
         </div>
     </div>
