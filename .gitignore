@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 .idea
-
+dump.rdb
 # Distribution / packaging
 .Python
 build/

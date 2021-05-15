@@ -1,6 +1,7 @@
 import io
 from time import time
 
+from django.core.cache import cache
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -16,15 +17,20 @@ from .services.post_service import get_all_posts, get_comments_for_post, get_pos
 from .services.subscribe_service import get_all_subscribers, get_author, subscribe
 from .tasks import notify_async, send_email_to_all_subscribers
 
-
 # -----------------------------------------------------------
 # view functions for posts - models: Post, Author
 # -----------------------------------------------------------
 
 
 class PostsListView(ListView):
-    queryset = get_all_posts()
     template_name = 'pages/post_list.html'
+
+    def get_queryset(self):
+        posts_list_qs = cache.get('posts_list_qs')
+        if not posts_list_qs:
+            posts_list_qs = get_all_posts()
+            cache.set('posts_list_qs', posts_list_qs)
+        return posts_list_qs
 
 
 def author_posts(request, author_id):
@@ -67,7 +73,7 @@ def post_update(request, post_id):
         form = PostForm(instance=post, data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect("posts_all")
+            return redirect("post_list")
         else:
             err = "error on update post"
     else:
@@ -87,14 +93,18 @@ def post_update(request, post_id):
 def authors_new(request):
     faker = Faker()
     Author(name=faker.name(), email=faker.email()).save()
-    return redirect("authors_all")
+    return redirect("author_list")
 
 
-def authors_all(request):
-    context = {
-        "authors": Author.objects.all().prefetch_related("books")
-    }
-    return render(request, "pages/authors.html", context=context)
+class AuthorsListView(ListView):
+    template_name = 'pages/author_list.html'
+
+    def get_queryset(self):
+        authors_list_qs = cache.get('authors_list_qs')
+        if not authors_list_qs:
+            authors_list_qs = Author.objects.all().prefetch_related("books")
+            cache.set('authors_list_qs', authors_list_qs)
+        return authors_list_qs
 
 
 def author_subscribe(request):
@@ -132,13 +142,15 @@ def books_all(request):
     return render(request, "pages/books.html", context=context)
 
 
-def categories_all(request):
-    context = {
-        "categories": Category.objects.all().prefetch_related("books")
-    }
-    return render(request, "pages/categories.html", context=context)
+class CategoriesListView(ListView):
+    template_name = 'pages/categories.html'
 
-
+    def get_queryset(self):
+        categories_list_qs = cache.get('categories_list_qs')
+        if not categories_list_qs:
+            categories_list_qs = Category.objects.all().prefetch_related("books")
+            cache.set('categories_list_qs', categories_list_qs)
+        return categories_list_qs
 # -----------------------------------------------------------
 # view functions for API - models: Author, Subscriber, Post
 # -----------------------------------------------------------

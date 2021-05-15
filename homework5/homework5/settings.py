@@ -19,8 +19,12 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Celery Config
-CELERY_BROKEN_URL = 'amqp://localhost'
-
+# CELERY_BROKEN_URL = 'amqp://localhost'
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Kiev'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
@@ -32,7 +36,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'send_email_to_all_subscribers': {
         'task': 'main.tasks.send_email_to_all_subscribers',
-        'schedule': crontab(minute=0, hour=9),
+        'schedule': crontab(minute=55),
     },
 }
 
@@ -96,6 +100,18 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "example"
+    }
+}
+
+CACHE_TTL = 3 * 60 * 60
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
