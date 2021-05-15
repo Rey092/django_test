@@ -17,12 +17,12 @@ urlpatterns = [
     path('posts/update/<int:post_id>/', views.post_update, name='post_update'),
 
     path('authors/new/', views.authors_new, name='authors_new'),
-    path('authors/all/', views.authors_all, name='authors_all'),
+    path('authors/all/', views.AuthorsListView.as_view(), name='author_list'),
     path('author/subscribe/', views.author_subscribe, name='author_subscribe'),
     path('author/subscribers/all/', views.author_subscribers_all, name='author_subscribers_all'),
 
     path('author/books/', views.books_all, name='books_all'),
-    path('author/categories/', views.categories_all, name='categories_all'),
+    path('author/categories/', views.CategoriesListView.as_view(), name='categories_all'),
 
     path('api/posts/', views.json_posts, name='json_posts'),
     path('api/post/<int:post_id>/', views.api_post_show, name='api_post_show'),
@@ -34,4 +34,6 @@ urlpatterns = [
     path('logs_delete/', views.test, name='test'),
 
     path('contact-us/create/', views.CreateContactUsView.as_view(), name='contact_us'),
+
+    path('parser/medusweet/', views.medusweet_xlsx, name='medusweet_xlsx')
 ]
