@@ -34,7 +34,7 @@ class PostsListView(ListView):
 
 
 def author_posts(request, author_id):
-    return render(request, "pages/post_list.html", {"posts": posts_by_author(author_id)})
+    return render(request, "pages/post_list.html", {"post_list": posts_by_author(author_id)})
 
 
 def post_create(request):

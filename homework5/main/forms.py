@@ -36,8 +36,6 @@ class SubscribeForm(ModelForm):
                 "required": "required",
                 "class": "form-control",
                 "placeholder": "Your email",
-                # "pattern": "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                # Валидация через HTML. Пишут не надежная...? Пока оставлю серверную валидацию мыла, эту закомменчу.
             }),
             "author_id": Select(attrs={
                 "required": "required",

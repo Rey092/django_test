@@ -1,3 +1,4 @@
+from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.utils.timezone import now
 
@@ -66,7 +67,7 @@ class Post(models.Model):
     author_id = models.ForeignKey("Author", on_delete=models.CASCADE)
     title = models.CharField("Post title", max_length=100)
     description = models.CharField("Post description", max_length=50)
-    content = models.TextField("Post content", max_length=100)
+    content = models.TextField("Post content", validators=[MaxLengthValidator(8000)])
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(default=now)
 
