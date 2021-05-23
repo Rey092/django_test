@@ -10,6 +10,12 @@ install:
 freeze:
 	pip freeze > requirements.txt
 
+super:
+	cd $(main_app) && python manage.py createsuperuser
+
+module:
+	cd $(main_app) && python manage.py startapp account
+
 shell: # only after 'make extensions-install'
 	python $(manage.py) shell_plus --print-sql
 

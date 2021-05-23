@@ -2,7 +2,7 @@
 
 
 {% block title %}
-    {{ title }}
+    asgsg
 {% endblock %}
 
 
@@ -25,10 +25,13 @@
                 {{ form.content }}
                 {{ form.author_id }}
                 <br>
-                <button class="btn btn-success">Edit Post</button>
+                {% if authenticated %}
+                    <button class="btn btn-success">Edit Post</button>
+                    <button class="btn btn-default btn-danger" name="delete" type="submit" value="Delete post">Delete
+                        Post
+                    </button>
+                {% endif %}
             </form>
         </div>
-
     </div>
-
 {% endblock %}

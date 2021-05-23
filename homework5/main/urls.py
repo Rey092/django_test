@@ -20,6 +20,7 @@ urlpatterns = [
     path('authors/all/', views.AuthorsListView.as_view(), name='author_list'),
     path('author/subscribe/', views.author_subscribe, name='author_subscribe'),
     path('author/subscribers/all/', views.author_subscribers_all, name='author_subscribers_all'),
+    path('author/delete/<int:pk>', views.remove_obj, name='author_delete'),
 
     path('author/books/', views.books_all, name='books_all'),
     path('author/categories/', views.CategoriesListView.as_view(), name='categories_all'),
@@ -35,5 +36,5 @@ urlpatterns = [
 
     path('contact-us/create/', views.CreateContactUsView.as_view(), name='contact_us'),
 
-    path('parser/medusweet/', views.medusweet_xlsx, name='medusweet_xlsx')
+    path('parser/medusweet/', views.medusweet_xlsx, name='medusweet_xlsx'),
 ]

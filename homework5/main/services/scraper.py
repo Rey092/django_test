@@ -43,7 +43,7 @@ def medusweet_scraper():
         content = soup.find('section', attrs={'class': 'post_content'})
         content_stripped = ' '.join([p.text.strip() for p in content])
 
-        result['titles'].append(title)
-        result['contents'].append(content_stripped)
+        result['titles'].append(str(title))
+        result['contents'].append(str(content_stripped))
 
     return result
