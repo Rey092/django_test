@@ -7,6 +7,7 @@ __pycache__/
 *.so
 .idea
 dump.rdb
+static_content
 # Distribution / packaging
 .Python
 build/
