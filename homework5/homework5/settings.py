@@ -14,9 +14,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '4kb7b$8=ag87%g39a$*@x%7954(vsfb_vax+pe44lbj#dum-i6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Celery Config
 # CELERY_BROKEN_URL = 'amqp://localhost'
@@ -152,6 +152,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static_content', 'static')
+STATICFILES_DIRS = [
+    BASE_DIR / "main",
+]
 
 INTERNAL_IPS = [
     "127.0.0.1",

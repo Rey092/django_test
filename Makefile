@@ -1,5 +1,9 @@
 manage.py = homework5/manage.py
 main_app = homework5
+include .env
+export $(shell sed 's/=.*//' .env)
+PROJECT_DIR=$(shell pwd)
+WSGI_PORT=8001
 
 fill_posts:
 	python $(manage.py) fill_posts
@@ -20,7 +24,7 @@ shell: # only after 'make extensions-install'
 	python $(manage.py) shell_plus --print-sql
 
 run:
-	python $(manage.py) runserver
+	python $(manage.py) runserver 0.0.0.0:8000
 
 kill-port:
 	sudo fuser -k 8000/tcp
@@ -99,6 +103,12 @@ beat:
 worker-info:
 	cd $(main_app) && celery -A $(main_app) events
 
+# WSGI_APPLICATION
+gunicorn-run:
+	gunicorn -w 4 -b 127.0.0.1:$(WSGI_PORT) --chdir $(PROJECT_DIR)/homework5 homework5.wsgi --timeout 30 --log-level debug --max-requests 10000
+
+collect-static:
+	python $(manage.py) collectstatic
 # worker-info-web:
 #	in basic console:
 #   pip install flower
